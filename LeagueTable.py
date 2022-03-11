@@ -41,6 +41,9 @@ class LeagueTable:
             point_allocations.append({"name": team2[0], "points": team2_points_earned})
         [self._add_game_result(pa) for pa in point_allocations]
     
+    def clear_table(self):
+        self.teams = []
+
     def _add_game_result(self, result):
         for team in self.teams:
             if team.name == result["name"]:
