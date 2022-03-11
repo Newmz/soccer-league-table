@@ -4,27 +4,22 @@ class LeagueTable:
     
     def __str__(self):
         output_str = ""
-        output_list = []
         self.teams = sorted(self.teams, reverse=True)
         place = 0
         streak = 1
         prev_points = None
         for team in self.teams:
-            points = team.points
-            name = team.name
-            if prev_points != points:
+            if prev_points != team.points:
                 place += streak
-                prev_points = points
+                prev_points = team.points
                 streak = 1
             else:
                 streak += 1
-            suffix = "pts" if points != 1 else "pt"
-            output_str += f"{place}. {name}, {points} {suffix}\n"
-            output_list.append(f"{place}. {name}, {points} {suffix}\n")
-        return output_str[:-1]
+            suffix = "pts" if team.points != 1 else "pt"
+            output_str += f"{place}. {team.name}, {team.points} {suffix}\n"
+        return output_str  # or output_str[:-1] - couldn't tell if I placed newline into output when moving files
 
     def read_in_game_results(self, input_file):
-        point_allocations = []
         game_results = open(input_file, 'r').readlines()
         for result in game_results:
             team1, team2 = self._split_result_line(result)
@@ -37,9 +32,8 @@ class LeagueTable:
             else: 
                 team1_points_earned = 0
                 team2_points_earned = 3
-            point_allocations.append({"name": team1[0], "points": team1_points_earned})
-            point_allocations.append({"name": team2[0], "points": team2_points_earned})
-        [self._add_game_result(pa) for pa in point_allocations]
+            self._add_game_result({"name": team1[0], "points": team1_points_earned})
+            self._add_game_result({"name": team2[0], "points": team2_points_earned})
     
     def clear_table(self):
         self.teams = []
@@ -63,8 +57,6 @@ class LeagueTable:
         return team1, team2
 
 
-    
-    
 class Team:
     def __init__(self, name):
         self.name = name
